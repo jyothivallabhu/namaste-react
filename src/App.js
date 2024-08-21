@@ -2,6 +2,10 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import Header from './components/Header'
 import Body from './components/Body'
+import Error from './components/Error'
+import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom'
+import About from './components/About'
+import RestaurantMenu from './components/RestaurantMenu'
 
 
           
@@ -11,7 +15,7 @@ const AppLayout = () => {
         <>
             <div id="container "> 
           <Header />
-          <Body />
+          <Outlet />
                 {/* <RestaurantCard resData={ resListArr[0] } />
                 <RestaurantCard resData={resListArr[1]} />
                 <RestaurantCard resData={ resListArr[2] } /> */}
@@ -35,8 +39,44 @@ const AppLayout = () => {
     )
 }
 
+const appRouter = createBrowserRouter([
+  {
+    path: "/",
+    element: <AppLayout />,
+    children: [
+    {
+        path: "/",
+        element : <Body />
+      },
+      {
+        path: "about",
+        element: <About />,
+        children: [
+          {
+            path: "contact",
+            element : <About />
+          }
+        ]
+      },
+      {
+        path: "restaurants/:resId",
+        element :<RestaurantMenu />
+      },
+      {
+        path: "Contact",
+        element : <About />
+      }
+      
+    ],
+    errorElement  : <Error />
+   
+  },
+   
+  
+])
+
 const root = ReactDOM.createRoot(document.getElementById("root"))
-root.render(<AppLayout />)
+root.render(<RouterProvider router={appRouter } />)
 
     
 /*     

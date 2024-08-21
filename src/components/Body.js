@@ -3,6 +3,7 @@ import RestaurantCard from "./RestaurantCard"
 import { useEffect, useState } from "react"
    import { SWIGGY_API } from "../utils/constants"
 import Shimmer from "./Shimmer"
+import useOnlineStatus from "../utils/useOnlineStatus"
 
 
 const Body = () => {
@@ -12,7 +13,13 @@ const Body = () => {
     /*  */
     
     useEffect(() => {
-       fetchData()
+        fetchData()
+        
+        return () => {
+            
+            console.log('cleared');
+            
+        };
         
     }, [])
     
@@ -30,6 +37,11 @@ const Body = () => {
              console.log('error');
         } 
     }
+
+     const online = useOnlineStatus()
+    if (!online) return (<h1>Looks like No internet</h1>)
+    
+    
 
     /* if (resList.length === 0) {
         return (<Shimmer/>)

@@ -7,32 +7,27 @@ import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom'
 import About from './components/About'
 import RestaurantMenu from './components/RestaurantMenu'
 //import Grocery from './components/Grocery'
+import { Provider } from 'react-redux'
+import appStore from './utils/appStore'
+import Cart from './components/Cart'
 
 const Grocery = lazy(()=> import('./components/Grocery'))
           
-
 const AppLayout = () => {
     return (
         <>
-            <div id="container "> 
+        <div id="container "> 
+          <Provider  store={appStore } >
           <Header />
           <Outlet />
-                {/* <RestaurantCard resData={ resListArr[0] } />
-                <RestaurantCard resData={resListArr[1]} />
-                <RestaurantCard resData={ resListArr[2] } /> */}
+                {/* <RestaurantCard resData={ resListArr[0] } /> */}
                 {/* {
                     resListArr.map((restaurant) => (
                         <RestaurantCard key={restaurant.info.id} resData={restaurant} />
                     )
-                       
-                    )
                 }
-
-                {
-                    resListArr.map((reslist) => 
-                        (<RestaurantCard key={reslist.info.id} resData={ reslist} />)
-                    )
-                } */}
+              */}
+            </Provider>
             </div>
         </>
         
@@ -69,7 +64,11 @@ const appRouter = createBrowserRouter([
       },
       {
         path: "grocery",
-      element: <Suspense fallback={<h1>Loading</h1>} > <Grocery /></Suspense>  
+        element: <Suspense fallback={<h1>Loading</h1>} > <Grocery /></Suspense>  
+      },
+      {
+        path: "cart",
+        element: <Cart />
       }
       
     ],

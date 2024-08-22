@@ -3,12 +3,14 @@ import { LOGOURL } from "../utils/constants";
 import { Link } from "react-router-dom";
 import useOnlineStatus from "../utils/useOnlineStatus";
 import UserContext from "../utils/UserContext";
+import { useSelector } from "react-redux";
 
 const Header = () => {
 
     const {loggedInUser,date } = useContext(UserContext)
     
-
+    const cartItems = useSelector((store)=> store.cart.items)
+    
     const [buttonClick, setButtonClick] = useState('Login')
 
     const onlineStatus = useOnlineStatus()
@@ -25,7 +27,7 @@ const Header = () => {
                     <li className="px-5"><Link to="about">About Us</Link></li>
                     
                    <li className="px-5"><Link>Contact Us</Link></li>
-                    <li className="px-5">Cart</li>
+                    <li className="px-5"><Link to = "cart"> Cart {cartItems.length}</Link> </li>
                     <li className="px-5">
                         <button className="rounded bg-cyan-200 p-4" onClick={() => {
                         setButtonClick(buttonClick === 'Logout' ? 'Login' : 'Logout')

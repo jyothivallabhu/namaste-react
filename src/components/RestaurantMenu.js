@@ -2,51 +2,61 @@
 import Shimmer from "./Shimmer"
 import { useParams } from "react-router-dom"
 import useRestaurantMenu from "../utils/useRestaurantMenu"
-
+import ResCategory from "./ResCategory"
+import RestaurantCategory from "./RestaurantCategory"
+import { useState } from "react"
 
 const RestaurantMenu = () => {
    
+    const [showIndex, setShowIndex] = useState(null)
+    const { resId } = useParams()
+    console.log(resId);
     
-    const {resId} =useParams()
-
     const resInfo = useRestaurantMenu(resId)
-
-   
-    
-//     useEffect(() => {
-//     fetchMenu()
-//     }, [])
-    
-//     const fetchMenu = async() => {
-// const data = await fetch("https://cors-anywhere.herokuapp.com/https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=17.4801969&lng=78.4171028&restaurantId="+resId+"&catalog_qa=undefined&submitAction=ENTER")
-
-//         const json = await data.json()
-//         //console.log(json?.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[3]?.card?.card?.itemCards)
-//         setResInfo(json?.data)
-    //     }
-    
     
      if(resInfo === null) return <Shimmer/>
    
     const { name, cuisines, costForTwoMessage } = resInfo?.cards[2]?.card?.card?.info;
-    const {itemCards} = resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[3]?.card?.card
+    //const itemCards = resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[3]?.card?.card?.categories[0]?.itemCards
     
+    //console.log(resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards)
+    //rest.info.name.toLowerCase().includes(searchText.toLowerCase())
+ 
+    const allCards = resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards
+    
+      const categories =
+    resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards.filter(
+      (c) =>
+        c.card?.["card"]?.["@type"] ===
+        "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory"
+    );
+  //console.log(categories);
+ 
+
     return  (
-        <div className="restaurant-menu">
-            <h1>{name}</h1>
-            <h2>{cuisines.join(', ')}</h2>
-            <h4>{costForTwoMessage}</h4>
-            <ul>
-                {
-                    itemCards.map((items) => 
-                        <li key={items.card.info.id}>{items.card.info.name} - Rs {items.card.info.price/100}</li>
+        <div className="text-center">
+            <h1 className="font-bold my-6 text-2xl">{name}</h1>
+            <h2 className="text-lg font-bold">{cuisines.join(', ') } - {costForTwoMessage}</h2> 
+            
+
+            {
+                categories.map((category, index) => {
+                    return (<RestaurantCategory key={category?.card?.card.title} data={category?.card.card} showItems={(index === showIndex ? true : false)}  
+                        setShowIndex= {()=>setShowIndex(index)} showIndex ={showIndex}
+                    />)
+                })
+            }
+
+            
+                    
+            {/* <ul>
+            {
+            itemCards.map((items) =>
+                        <li key={items.card.info.id}>{items.card.info.name} - Rs {items.card.info.defaultPrice/100}</li>
                     )
                 }
                 
-                <li>Pizza</li>
-                <li>Chicken</li>
-                <li>FriedRice</li>
-            </ul>
+            </ul> */}
 
         </div>
     )

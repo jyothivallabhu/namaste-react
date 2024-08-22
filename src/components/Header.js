@@ -1,32 +1,37 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { LOGOURL } from "../utils/constants";
 import { Link } from "react-router-dom";
 import useOnlineStatus from "../utils/useOnlineStatus";
+import UserContext from "../utils/UserContext";
 
 const Header = () => {
+
+    const {loggedInUser,date } = useContext(UserContext)
     
+
     const [buttonClick, setButtonClick] = useState('Login')
 
     const onlineStatus = useOnlineStatus()
     return (
-        <div className='header'>
-            <div className='logo'>
+        <div className='flex justify-between  bg-slate-600 shadow-lg text-cyan-50 '>
+            <div className='p-5'>
                 <img alt='logo' src={LOGOURL}  width={100}/>
             </div>
             <div className='nav-items'>
-                <ul>
-                    <li> { onlineStatus ===true ? 'online' : 'offline '}</li>
-                    <li><Link to='/'>Home</Link></li>
+                <ul className="p-5 m-5 flex items-center ">
+                    <li className="px-5" > { onlineStatus ===true ? 'online' : 'offline '}</li>
+                    <li className="px-5"><Link to='/'>Home</Link></li>
+                    <li className="px-5"><Link to='grocery'>Grocery</Link></li>
+                    <li className="px-5"><Link to="about">About Us</Link></li>
                     
-                    <li><Link to="about">About Us</Link></li>
-                    
-                   <li><Link>Contact Us</Link></li>
-                    <li>Cart</li>
-                    <li>
-                        <button className="login" onClick={() => {
+                   <li className="px-5"><Link>Contact Us</Link></li>
+                    <li className="px-5">Cart</li>
+                    <li className="px-5">
+                        <button className="rounded bg-cyan-200 p-4" onClick={() => {
                         setButtonClick(buttonClick === 'Logout' ? 'Login' : 'Logout')
                     }} >{buttonClick }</button>
                     </li>
+                    <li>{loggedInUser } - {date} </li>
                 </ul>
             </div>
         </div>
